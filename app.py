@@ -8,8 +8,8 @@ from torchvision import transforms
 
 # torch.set_float32_matmul_precision(['high', 'highest'][0])
 
-birefnet = AutoModelForImageSegmentation.from_pretrained('zhengpeng7/BiRefNet', trust_remote_code=True,device="auto",torch_dtype=torch.float16)
-
+birefnet = AutoModelForImageSegmentation.from_pretrained('zhengpeng7/BiRefNet', trust_remote_code=True,torch_dtype=torch.float16)
+birefnet.to("cuda")
 transform_image = transforms.Compose([
     transforms.Resize((1024, 1024)),
     transforms.ToTensor(),
@@ -33,7 +33,7 @@ def fn(image):
     return out
 
 slider1 = ImageSlider(label="birefnet", type="pil")
-slider2 = ImageSlider(label="RMBG", type="pil")
+slider2 = ImageSlider(label="birefnet", type="pil")
 image = gr.Image(label="Upload an image")
 text = gr.Textbox(label="Paste an image URL")
 
@@ -41,7 +41,7 @@ text = gr.Textbox(label="Paste an image URL")
 tab1 = gr.Interface(fn,inputs= image, outputs= slider1, api_name="image")
 tab2 = gr.Interface(fn,inputs= text, outputs= slider2, api_name="text")
 
-demo = gr.TabbedInterface([tab1,tab2],["image","text"],title="RMBG with image slider")
+demo = gr.TabbedInterface([tab1,tab2],["image","text"],title="birefnet with image slider")
 
 if __name__ == "__main__":
     demo.launch()
