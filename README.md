@@ -1,6 +1,6 @@
 ---
 title: Background Removal
-emoji: 🏃
+emoji: 🌘w🌖
 colorFrom: purple
 colorTo: indigo
 sdk: gradio
