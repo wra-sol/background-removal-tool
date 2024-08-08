@@ -6,9 +6,9 @@ from transformers import AutoModelForImageSegmentation
 import torch
 from torchvision import transforms
 
-# torch.set_float32_matmul_precision(['high', 'highest'][0])
+torch.set_float32_matmul_precision(['high', 'highest'][0])
 
-birefnet = AutoModelForImageSegmentation.from_pretrained('zhengpeng7/BiRefNet', trust_remote_code=True,torch_dtype=torch.float16)
+birefnet = AutoModelForImageSegmentation.from_pretrained('zhengpeng7/BiRefNet', trust_remote_code=True)
 birefnet.to("cuda")
 transform_image = transforms.Compose([
     transforms.Resize((1024, 1024)),
