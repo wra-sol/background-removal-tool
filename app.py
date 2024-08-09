@@ -8,7 +8,7 @@ from torchvision import transforms
 
 torch.set_float32_matmul_precision(['high', 'highest'][0])
 
-birefnet = AutoModelForImageSegmentation.from_pretrained('zhengpeng7/BiRefNet', trust_remote_code=True)
+birefnet = AutoModelForImageSegmentation.from_pretrained('ZhengPeng7/BiRefNet', trust_remote_code=True)
 birefnet.to("cuda")
 transform_image = transforms.Compose([
     transforms.Resize((1024, 1024)),
@@ -22,6 +22,8 @@ transform_image = transforms.Compose([
 def fn(image):
     im = load_img(image)
     im = im.convert('RGB') 
+    image_size = im.size
+    origin = im.copy()
     image = load_img(im)
     input_images = transform_image(image).unsqueeze(0).to('cuda')
     # Prediction
@@ -29,8 +31,9 @@ def fn(image):
         preds = birefnet(input_images)[-1].sigmoid().cpu()
     pred = preds[0].squeeze()
     pred_pil = transforms.ToPILImage()(pred)
-    out = (pred_pil , im)
-    return out
+    mask = pred_pil.resize(image_size)
+    image.putalpha(mask)
+    return (image , origin)
 
 slider1 = ImageSlider(label="birefnet", type="pil")
 slider2 = ImageSlider(label="birefnet", type="pil")
