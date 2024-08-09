@@ -5,7 +5,7 @@ import spaces
 from transformers import AutoModelForImageSegmentation
 import torch
 from torchvision import transforms
-
+from PIL import Image
 torch.set_float32_matmul_precision(['high', 'highest'][0])
 
 birefnet = AutoModelForImageSegmentation.from_pretrained('ZhengPeng7/BiRefNet', trust_remote_code=True)
@@ -20,7 +20,7 @@ transform_image = transforms.Compose([
 
 @spaces.GPU
 def fn(image):
-    im = load_img(image)
+    im = load_img(image,output_type="pil")
     im = im.convert('RGB') 
     image_size = im.size
     origin = im.copy()
@@ -40,9 +40,10 @@ slider2 = ImageSlider(label="birefnet", type="pil")
 image = gr.Image(label="Upload an image")
 text = gr.Textbox(label="Paste an image URL")
 
-
-tab1 = gr.Interface(fn,inputs= image, outputs= slider1, api_name="image")
-tab2 = gr.Interface(fn,inputs= text, outputs= slider2, api_name="text")
+chameleon = Image.open("chameleon.jpg")
+url = "https://hips.hearstapps.com/hmg-prod/images/gettyimages-1229892983-square.jpg"
+tab1 = gr.Interface(fn,inputs= image, outputs= slider1,examples=[chameleon], api_name="image")
+tab2 = gr.Interface(fn,inputs= text, outputs= slider2,examples=[url], api_name="text")
 
 demo = gr.TabbedInterface([tab1,tab2],["image","text"],title="birefnet with image slider")
 
