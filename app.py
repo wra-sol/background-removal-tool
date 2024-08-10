@@ -5,7 +5,6 @@ import spaces
 from transformers import AutoModelForImageSegmentation
 import torch
 from torchvision import transforms
-from PIL import Image
 
 torch.set_float32_matmul_precision(["high", "highest"][0])
 
