@@ -45,12 +45,12 @@ slider2 = ImageSlider(label="birefnet", type="pil")
 image = gr.Image(label="Upload an image")
 text = gr.Textbox(label="Paste an image URL")
 
-chameleon = Image.open("chameleon.jpg")
-cool = Image.open("cool kid.jpg")
+
+chameleon = load_img("chameleon.jpg", output_type="pil")
 
 url = "https://hips.hearstapps.com/hmg-prod/images/gettyimages-1229892983-square.jpg"
 tab1 = gr.Interface(
-    fn, inputs=image, outputs=slider1, examples=[[chameleon], [cool]], api_name="image"
+    fn, inputs=image, outputs=slider1, examples=[chameleon], api_name="image"
 )
 
 tab2 = gr.Interface(fn, inputs=text, outputs=slider2, examples=[url], api_name="text")
