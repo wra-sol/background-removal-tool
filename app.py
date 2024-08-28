@@ -23,8 +23,8 @@ transform_image = transforms.Compose(
 
 @spaces.GPU
 def fn(image):
-    if image == None : 
-        return (None,None)
+    if not image or not image[0]:
+        return image
     im = load_img(image, output_type="pil")
     im = im.convert("RGB")
     image_size = im.size
