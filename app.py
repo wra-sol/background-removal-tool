@@ -20,14 +20,16 @@ transform_image = transforms.Compose(
     ]
 )
 
-
-@spaces.GPU
 def fn(image):
     im = load_img(image, output_type="pil")
     im = im.convert("RGB")
-    image_size = im.size
     origin = im.copy()
-    image = load_img(im)
+    image = process(im)
+    return (image, origin)
+
+@spaces.GPU
+def process(image):
+    image_size = image.size
     input_images = transform_image(image).unsqueeze(0).to("cuda")
     # Prediction
     with torch.no_grad():
@@ -36,13 +38,22 @@ def fn(image):
     pred_pil = transforms.ToPILImage()(pred)
     mask = pred_pil.resize(image_size)
     image.putalpha(mask)
-    return (image, origin)
-
+    return image
+  
+def process_file(f):
+    name_path = f.rsplit(".",1)[0]+".png"
+    im = load_img(f, output_type="pil")
+    im = im.convert("RGB")
+    transparent = process(im)
+    transparent.save(name_path)
+    return name_path
 
 slider1 = ImageSlider(label="birefnet", type="pil")
 slider2 = ImageSlider(label="birefnet", type="pil")
 image = gr.Image(label="Upload an image")
+image2 = gr.Image(label="Upload an image",type="filepath")
 text = gr.Textbox(label="Paste an image URL")
+png_file = gr.File(label="output png file")
 
 
 chameleon = load_img("butterfly.jpg", output_type="pil")
@@ -53,10 +64,11 @@ tab1 = gr.Interface(
 )
 
 tab2 = gr.Interface(fn, inputs=text, outputs=slider2, examples=[url], api_name="text")
+tab3 = gr.Interface(process_file, inputs=image2, outputs=png_file, examples=["butterfly.jpg"], api_name="png")
 
 
 demo = gr.TabbedInterface(
-    [tab1, tab2], ["image", "text"], title="birefnet for background removal"
+    [tab1, tab2,tab3], ["image", "text","png"], title="birefnet for background removal"
 )
 
 if __name__ == "__main__":
