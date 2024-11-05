@@ -12,6 +12,7 @@ birefnet = AutoModelForImageSegmentation.from_pretrained(
     "ZhengPeng7/BiRefNet", trust_remote_code=True
 )
 birefnet.to("cuda")
+
 transform_image = transforms.Compose(
     [
         transforms.Resize((1024, 1024)),
@@ -24,8 +25,8 @@ def fn(image):
     im = load_img(image, output_type="pil")
     im = im.convert("RGB")
     origin = im.copy()
-    image = process(im)
-    return (image, origin)
+    processed_image = process(im)
+    return (processed_image, origin)
 
 @spaces.GPU
 def process(image):
@@ -39,36 +40,32 @@ def process(image):
     mask = pred_pil.resize(image_size)
     image.putalpha(mask)
     return image
-  
+
 def process_file(f):
-    name_path = f.rsplit(".",1)[0]+".png"
+    name_path = f.rsplit(".", 1)[0] + ".png"
     im = load_img(f, output_type="pil")
     im = im.convert("RGB")
     transparent = process(im)
     transparent.save(name_path)
     return name_path
 
-slider1 = ImageSlider(label="birefnet", type="pil")
-slider2 = ImageSlider(label="birefnet", type="pil")
-image = gr.Image(label="Upload an image")
-image2 = gr.Image(label="Upload an image",type="filepath")
-text = gr.Textbox(label="Paste an image URL")
-png_file = gr.File(label="output png file")
+slider1 = ImageSlider(label="Processed Image", type="pil")
+slider2 = ImageSlider(label="Processed Image from URL", type="pil")
+image_upload = gr.Image(label="Upload an image")
+image_file_upload = gr.Image(label="Upload an image", type="filepath")
+url_input = gr.Textbox(label="Paste an image URL")
+output_file = gr.File(label="Output PNG File")
 
-
+# Example images
 chameleon = load_img("butterfly.jpg", output_type="pil")
+url_example = "https://hips.hearstapps.com/hmg-prod/images/gettyimages-1229892983-square.jpg"
 
-url = "https://hips.hearstapps.com/hmg-prod/images/gettyimages-1229892983-square.jpg"
-tab1 = gr.Interface(
-    fn, inputs=image, outputs=slider1, examples=[chameleon], api_name="image"
-)
-
-tab2 = gr.Interface(fn, inputs=text, outputs=slider2, examples=[url], api_name="text")
-tab3 = gr.Interface(process_file, inputs=image2, outputs=png_file, examples=["butterfly.jpg"], api_name="png")
-
+tab1 = gr.Interface(fn, inputs=image_upload, outputs=slider1, examples=[chameleon], api_name="image")
+tab2 = gr.Interface(fn, inputs=url_input, outputs=slider2, examples=[url_example], api_name="text")
+tab3 = gr.Interface(process_file, inputs=image_file_upload, outputs=output_file, examples=["butterfly.jpg"], api_name="png")
 
 demo = gr.TabbedInterface(
-    [tab1, tab2,tab3], ["image", "text","png"], title="birefnet for background removal"
+    [tab1, tab2, tab3], ["Image Upload", "URL Input", "File Output"], title="Background Removal Tool"
 )
 
 if __name__ == "__main__":
