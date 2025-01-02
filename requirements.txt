@@ -14,3 +14,4 @@ transformers>=4.39.1
 gradio
 gradio_imageslider
 loadimg>=0.1.1
+einops
