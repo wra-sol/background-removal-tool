@@ -1,5 +1,4 @@
 import gradio as gr
-from gradio_imageslider import ImageSlider
 from loadimg import load_img
 import spaces
 from transformers import AutoModelForImageSegmentation
@@ -49,8 +48,8 @@ def process_file(f):
     transparent.save(name_path)
     return name_path
 
-slider1 = ImageSlider(label="Processed Image", type="pil")
-slider2 = ImageSlider(label="Processed Image from URL", type="pil")
+slider1 = gr.ImageSlider(label="Processed Image", type="pil")
+slider2 = gr.ImageSlider(label="Processed Image from URL", type="pil")
 image_upload = gr.Image(label="Upload an image")
 image_file_upload = gr.Image(label="Upload an image", type="filepath")
 url_input = gr.Textbox(label="Paste an image URL")
