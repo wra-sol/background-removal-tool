@@ -48,8 +48,8 @@ def process_file(f):
     transparent.save(name_path)
     return name_path
 
-slider1 = gr.ImageSlider(label="Processed Image", type="pil")
-slider2 = gr.ImageSlider(label="Processed Image from URL", type="pil")
+slider1 = gr.ImageSlider(label="Processed Image", type="pil", format="png")
+slider2 = gr.ImageSlider(label="Processed Image from URL", type="pil", format="png")
 image_upload = gr.Image(label="Upload an image")
 image_file_upload = gr.Image(label="Upload an image", type="filepath")
 url_input = gr.Textbox(label="Paste an image URL")
