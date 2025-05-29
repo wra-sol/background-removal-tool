@@ -5,26 +5,12 @@ COPY package.json bun.lock ./
 RUN bun install --production
 COPY . .
 
-# ---- Python Stage ----
-FROM python:3.11-slim as python-build
-WORKDIR /app
-COPY --from=bun-build /app /app
-COPY requirements.txt ./
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        git \
-        libgl1 \
-        libglib2.0-0 \
-        && rm -rf /var/lib/apt/lists/*
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
 # ---- Final Stage ----
 FROM python:3.11-slim
 WORKDIR /app
 
-# Copy the app from python-build stage
-COPY --from=python-build /app /app
+# Copy the app from bun-build stage
+COPY --from=bun-build /app /app
 
 # Copy Bun binary from the bun-build stage
 COPY --from=bun-build /usr/local/bin/bun /usr/local/bin/bun
@@ -34,7 +20,13 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libgl1 \
         libglib2.0-0 \
+        build-essential \
+        git \
         && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 ENV PATH="/usr/local/bin:$PATH"
 
