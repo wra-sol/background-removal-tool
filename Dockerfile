@@ -22,17 +22,24 @@ RUN pip install --upgrade pip && \
 # ---- Final Stage ----
 FROM python:3.11-slim
 WORKDIR /app
+
+# Copy the app from python-build stage
 COPY --from=python-build /app /app
+
+# Copy Bun binary from the bun-build stage
+COPY --from=bun-build /usr/local/bin/bun /usr/local/bin/bun
+
+# Install runtime dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libgl1 \
         libglib2.0-0 \
         && rm -rf /var/lib/apt/lists/*
-# Install Bun
-RUN curl -fsSL https://bun.sh/install | bash && \
-    mv /root/.bun/bin/bun /usr/local/bin/bun
+
 ENV PATH="/usr/local/bin:$PATH"
+
 # Expose the port
 EXPOSE 3000
+
 # Start the Bun server
-CMD ["bun", "server.ts"] 
+CMD ["bun", "server.ts"]
