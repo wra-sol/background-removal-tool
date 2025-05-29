@@ -1,4 +1,4 @@
-from loadimg import load_img
+from PIL import Image
 import spaces
 from transformers import AutoModelForImageSegmentation
 import torch
@@ -25,7 +25,7 @@ transform_image = transforms.Compose(
 )
 
 def fn(image):
-    im = load_img(image, output_type="pil")
+    im = Image.open(image)
     im = im.convert("RGB")
     origin = im.copy()
     processed_image = process(im)
@@ -46,7 +46,7 @@ def process(image):
 
 def process_file(f):
     name_path = f.rsplit(".", 1)[0] + ".png"
-    im = load_img(f, output_type="pil")
+    im = Image.open(f)
     im = im.convert("RGB")
     transparent = process(im)
     transparent.save(name_path)
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     import sys
     if len(sys.argv) == 3:
         input_file, output_file = sys.argv[1], sys.argv[2]
-        im = load_img(input_file, output_type="pil")
+        im = Image.open(input_file)
         im = im.convert("RGB")
         transparent = process(im)
         transparent.save(output_file)
