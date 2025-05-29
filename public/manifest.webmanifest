@@ -1,0 +1,21 @@
+{
+    "name": "Background Removal Tool",
+    "short_name": "BG Clean",
+    "description": "Quickly remove the background from your images.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f3f4f6",
+    "theme_color": "#007aff",
+    "icons": [
+      {
+        "src": "/public/images/apple-touch-icon.png",
+        "sizes": "180x180",
+        "type": "image/png"
+      },
+      {
+        "src": "/public/images/favicon.png",
+        "sizes": "32x32",
+        "type": "image/png"
+      }
+    ]
+  }

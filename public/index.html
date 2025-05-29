@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Background Removal Tool</title>
+    <link rel="stylesheet" href="/public/index.css" />
+    <link rel="icon" href="/public/images/icon.png" />
+    <link rel="apple-touch-icon" href="/public/images/icon.png" sizes="180x180" />
+    <link rel="manifest" href="/public/manifest.webmanifest" /> 
+    <meta name="theme-color" content="#007aff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quickly remove the background from your images.">
+    <meta name="keywords" content="background removal, image processing, image editing, image manipulation, image editing tool, image editing software, image editing app, image editing online, image editing free, image editing tool online, image editing tool free, image editing tool online free, image editing tool free online">
+    <meta name="author" content="Nathaniel Arfin">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    <meta name="yandexbot" content="index, follow">
+    <meta property="og:title" content="Background Removal Tool">
+    <meta property="og:description" content="Quickly remove the background from your images.">
+    <meta property="og:image" content="/public/images/BackgroundSeo.png">
+    <meta property="og:url" content="https://picbg.nathanielarfin.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Background Removal Tool">
+    <meta property="og:locale" content="CA">
+    <meta property="og:image:width" content="180">
+    <meta property="og:image:height" content="180">
+  </head>
+  <body>
+    <div class="content">
+      <div class="header">  
+        <h1>Background Removal Tool</h1>
+        <p>Quickly remove the background from your images.</p>
+      </div>
+    <div class="container">
+      <div class="row align-right">
+        <button type="button" id="resetBtn" class="reset-btn">⟳</button>
+      </div>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <div class="file-input-wrapper">
+          <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Drop image here or click to upload">
+            <span id="drop-zone-text">Drop image here or click to upload</span>
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              required
+              aria-label="Upload image"
+              id="imageUpload"
+              style="display: none;"
+            />
+            <span id="file-name" class="file-name">No file chosen</span>
+            <img id="originalPreview" class="original-preview" style="display:none; max-width: 100%; max-height: 180px; margin: 0.5rem 0; border-radius: 6px; box-shadow: 0 2px 8px rgba(99,102,241,0.08); background: #fff;" alt="Original preview" />
+            <button type="button" id="pasteBtn" class="paste-btn">Paste from Clipboard</button>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn">Process</button>
+        <span
+          id="loading"
+          style="display: none; margin-left: 10px"
+        >
+          <span class="spinner" aria-label="Loading"></span> Processing...
+        </span>
+        <div
+          id="errorMsg"
+          style="display: none; color: #dc2626; margin-top: 0.5rem"
+        ></div>
+      </form>
+      <div class="result-container">
+      <h2>Result:</h2>
+      <div class="result-wrapper">
+        <img
+          id="result"
+          style="max-width: 500px; display: none"
+          loading="lazy"
+          alt="Processed result"
+        />
+        <button
+          id="downloadBtn"
+          style="display: none; margin-top: 1rem"
+          type="button"
+        >
+          Download Result
+        </button>
+      </div>
+      </div>
+    </div>
+    <script type="module" src="/public/js/main.js"></script>
+    <footer>
+      <p>
+        Created by <a href="https://nathanielarfin.com" alt="Nathaniel Arfin's website" > Nathaniel Arfin</a> | <a href="/attributions">Attributions</a>
+      </p>
+    </footer>
+    </div>
+  </body>
+</html> 
