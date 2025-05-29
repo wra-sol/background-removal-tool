@@ -9,6 +9,7 @@ COPY . .
 FROM python:3.11-slim as python-build
 WORKDIR /app
 COPY --from=bun-build /app /app
+COPY requirements.txt ./
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
@@ -18,7 +19,6 @@ RUN apt-get update && \
         && rm -rf /var/lib/apt/lists/*
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
-
 # ---- Final Stage ----
 FROM python:3.11-slim
 WORKDIR /app
