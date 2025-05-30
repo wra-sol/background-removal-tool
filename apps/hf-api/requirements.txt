@@ -1,0 +1,8 @@
+torch
+torchvision
+pillow
+transformers>=4.39.1
+pillow-heif
+numpy<2
+accelerate
+huggingface-hub>0.25
