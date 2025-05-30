@@ -20,6 +20,7 @@ RUN pip install --upgrade pip && \
 COPY app.py ./
 COPY preload_model.py ./
 COPY entrypoint.sh ./
+RUN chmod +x entrypoint.sh
 
 # Set up model cache directory
 ENV TRANSFORMERS_CACHE=/code/model_cache
