@@ -1,18 +1,14 @@
 {
-  "name": "bg-clean",
-  "module": "index.ts",
-  "type": "module",
+  "name": "bg-clean-monorepo",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:server": "bun --hot apps/server/server.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "@elysiajs/static": "^1.3.0",
-    "@huggingface/transformers": "^3.5.1",
-    "elysia": "^1.3.3",
-    "multer": "^2.0.0"
   }
-}
+} 
