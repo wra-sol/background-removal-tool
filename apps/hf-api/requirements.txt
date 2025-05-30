@@ -6,3 +6,6 @@ pillow-heif
 numpy<2
 accelerate
 huggingface-hub>0.25
+einops
+kornia
+timm
