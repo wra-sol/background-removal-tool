@@ -9,3 +9,4 @@ huggingface-hub>0.25
 einops
 kornia
 timm
+uvicorn
