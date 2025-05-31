@@ -20,7 +20,7 @@ export const processRoute = new Elysia()
     form.append("file", await Bun.file(inputPath));
 
     // Call Hugging Face Space API
-    const response = await fetch(`${process.env.HF_API_URL || "http://localhost:7860"}/segment`, {
+    const response = await fetch(`http://${process.env.HF_API_URL || "localhost:7860"}/segment`, {
       method: "POST",
       body: form,
     });

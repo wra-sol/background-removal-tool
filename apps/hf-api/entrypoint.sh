@@ -5,4 +5,4 @@ set -e
 python preload_model.py
 
 # Start the server
-exec uvicorn app:app --host :: --port 7860 
+exec uvicorn apps.hf-api.app:app --host 0.0.0.0 --port ${PORT:-7860}
