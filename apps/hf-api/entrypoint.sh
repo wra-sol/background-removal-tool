@@ -5,4 +5,4 @@ set -e
 python preload_model.py
 
 # Start the server
-PYTHONPATH=. exec uvicorn apps.hf-api.app:app --host 0.0.0.0 --port ${PORT:-7860}
+PYTHONPATH="$(dirname "$0")/../.." exec uvicorn apps.hf-api.app:app --host 0.0.0.0 --port ${PORT:-7860}
