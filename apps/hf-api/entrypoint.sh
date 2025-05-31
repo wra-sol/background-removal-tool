@@ -6,4 +6,4 @@ python preload_model.py
 
 # Start the server
 export PYTHONPATH="$(dirname "$0")/../.."
-exec uvicorn apps.hf-api.app:app --host 0.0.0.0 --port ${PORT:-7860}
+exec uvicorn app:app --host 0.0.0.0 --port ${PORT:-7860}
