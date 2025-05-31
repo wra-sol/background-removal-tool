@@ -40,10 +40,18 @@ def process(image):
 
 @app.post("/segment")
 async def segment(file: UploadFile = File(...)):
-    im = Image.open(file.file)
-    im = im.convert("RGB")
-    transparent = process(im)
-    buf = io.BytesIO()
-    transparent.save(buf, format="PNG")
-    buf.seek(0)
-    return StreamingResponse(buf, media_type="image/png") 
+    print("[app.py] Received file:", file.filename)
+    try:
+        im = Image.open(file.file)
+        im = im.convert("RGB")
+        print("[app.py] Image converted to RGB")
+        transparent = process(im)
+        print("[app.py] Image processed and alpha mask applied")
+        buf = io.BytesIO()
+        transparent.save(buf, format="PNG")
+        buf.seek(0)
+        print("[app.py] Image saved to buffer, returning response")
+        return StreamingResponse(buf, media_type="image/png") 
+    except Exception as e:
+        print(f"[app.py] Error during processing: {e}")
+        raise 
