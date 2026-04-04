@@ -1,9 +1,19 @@
 import { Elysia } from "elysia";
-import { unlinkSync } from "fs";
+import { unlink, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { uploadsDir } from "./paths";
+
+function segmentEndpoint(): string {
+  const raw = (process.env.HF_API_URL ?? "").trim();
+  const base = (raw || "http://127.0.0.1:7860").replace(/\/+$/, "");
+  const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(base)
+    ? base
+    : `http://${base}`;
+  return `${withScheme}/segment`;
+}
 
 export const processRoute = new Elysia()
   .post("/process", async ({ request, set }) => {
-    // Get the file from the request
     const formData = await request.formData();
     console.log("[process.ts] Received form data");
     const fileEntry = formData.get("image");
@@ -14,26 +24,29 @@ export const processRoute = new Elysia()
     }
     const file = fileEntry;
 
-    const inputPath = `uploads/${Date.now()}_${file.name}`;
-    await Bun.write(inputPath, file);
+    const inputPath = join(uploadsDir, `${Date.now()}_${file.name}`);
+    const buf = Buffer.from(await file.arrayBuffer());
+    await writeFile(inputPath, buf);
     console.log(`[process.ts] File written to ${inputPath}`);
 
-    // Prepare form data to send to Hugging Face Space
     const form = new FormData();
-    form.append("file", await Bun.file(inputPath));
+    form.append(
+      "file",
+      new Blob([buf], { type: file.type || "application/octet-stream" }),
+      file.name || "upload"
+    );
     console.log("[process.ts] Prepared form data for Hugging Face API");
 
-    // Call Hugging Face Space API
-    console.log(`[process.ts] Sending request to Hugging Face API at ${process.env.HF_API_URL || "localhost:7860"}/segment`);
-    const response = await fetch(`${process.env.HF_API_URL || "localhost:7860"}/segment`, {
+    const segmentUrl = segmentEndpoint();
+    console.log(`[process.ts] Sending request to Hugging Face API at ${segmentUrl}`);
+    const response = await fetch(segmentUrl, {
       method: "POST",
       body: form,
     });
     console.log(`[process.ts] Received response from Hugging Face API: ${response.status}`);
 
-    // Clean up local file
-    try { 
-      unlinkSync(inputPath); 
+    try {
+      await unlink(inputPath);
       console.log(`[process.ts] Deleted local file ${inputPath}`);
     } catch (err) {
       console.error(`[process.ts] Error deleting file ${inputPath}:`, err);

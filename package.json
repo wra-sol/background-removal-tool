@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:server": "bun --hot apps/server/server.ts"
+    "dev:server": "cd apps/server && bun --hot server.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
