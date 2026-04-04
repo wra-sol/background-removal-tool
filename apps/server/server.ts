@@ -1,24 +1,35 @@
 import { Elysia } from "elysia";
+import node from "@elysiajs/node";
 import staticPlugin from "@elysiajs/static";
-import { mkdirSync, unlinkSync } from "fs";
+import { mkdirSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { publicDir, uploadsDir } from "./paths";
 import { processRoute } from "./process";
 
-// Ensure upload dir exists
 try {
-  mkdirSync("uploads");
+  mkdirSync(uploadsDir, { recursive: true });
 } catch {}
 
-const app = new Elysia();
+const isBun = typeof Bun !== "undefined" && !!Bun.file;
+const app = new Elysia(isBun ? {} : { adapter: node() });
 
 app
-  .use(staticPlugin({ assets: "public" }))
-  .get("/", () => Bun.file("public/index.html"))
-  .get("/attributions", () => Bun.file("public/attributions.html"))
+  .use(staticPlugin({ assets: publicDir }))
+  .get("/", async ({ set }) => {
+    set.headers["content-type"] = "text/html; charset=utf-8";
+    return readFile(join(publicDir, "index.html"), "utf-8");
+  })
+  .get("/attributions", async ({ set }) => {
+    set.headers["content-type"] = "text/html; charset=utf-8";
+    return readFile(join(publicDir, "attributions.html"), "utf-8");
+  })
   .use(processRoute)
   // Catch-all 404 handler (must be last)
-  .all("/*", ({ set }) => {
+  .all("/*", async ({ set }) => {
     set.status = 404;
-    return Bun.file("public/404.html");
+    set.headers["content-type"] = "text/html; charset=utf-8";
+    return readFile(join(publicDir, "404.html"), "utf-8");
   })
   .listen(3000);
 
