@@ -9,6 +9,10 @@ import pillow_heif
 
 app = FastAPI()
 
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
 torch.set_float32_matmul_precision(["high", "highest"][0])
 pillow_heif.register_heif_opener()
 

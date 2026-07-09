@@ -6,9 +6,12 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:server": "cd apps/server && bun --hot server.ts"
+    "dev:server": "cd apps/server && bun --hot server.ts",
+    "start:server": "npm run start --workspace=server",
+    "typecheck": "npm run typecheck --workspace=server"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "^5.8.3"
   }
-} 
+}
