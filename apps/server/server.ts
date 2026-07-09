@@ -14,8 +14,12 @@ try {
 const isBun = typeof Bun !== "undefined" && !!Bun.file;
 const app = new Elysia(isBun ? {} : { adapter: node() });
 
+const port = Number(process.env.PORT) || 3000;
+const hostname = process.env.HOST ?? "0.0.0.0";
+
 app
   .use(staticPlugin({ assets: publicDir }))
+  .get("/health", () => ({ status: "ok" }))
   .get("/", async ({ set }) => {
     set.headers["content-type"] = "text/html; charset=utf-8";
     return readFile(join(publicDir, "index.html"), "utf-8");
@@ -31,6 +35,6 @@ app
     set.headers["content-type"] = "text/html; charset=utf-8";
     return readFile(join(publicDir, "404.html"), "utf-8");
   })
-  .listen(3000);
+  .listen({ port, hostname });
 
-console.log("Elysia server running at http://localhost:3000");
+console.log(`Elysia server running at http://${hostname}:${port}`);

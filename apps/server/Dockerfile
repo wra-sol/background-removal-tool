@@ -1,12 +1,13 @@
-# ---- Bun & Node Stage ----
-FROM oven/bun:1.1.13 as bun-build
+FROM oven/bun:1.1.13
+
 WORKDIR /app
-COPY package.json bun.lock ./
+
+COPY package.json ./
 RUN bun install --production
+
 COPY . .
 
-# Expose the port
+ENV NODE_ENV=production
 EXPOSE 3000
 
-# Start the Bun server
 CMD ["bun", "server.ts"]
